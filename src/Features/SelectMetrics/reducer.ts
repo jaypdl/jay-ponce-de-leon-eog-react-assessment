@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from 'redux-starter-kit';
 
 // Want to grab all metric types from the api
 // Add them to the reducer
+// Toggle metric options on and off
 
-// const initialState: MetricOptions = []; // initialize as empty array of strings
 export type SelectedMetric = {
   [metricName: string]: boolean;
 };
@@ -13,13 +13,17 @@ export type MetricState = {
   selectedMetrics: SelectedMetric;
 };
 
+export type GetMetricError = {
+  error: string;
+};
+
 const initialState: MetricState = {
   metricsOptions: [],
   selectedMetrics: {},
 };
 
-const metricsSlice = createSlice({
-  name: 'metrics',
+const metricsOptionsSlice = createSlice({
+  name: 'metricsOptions',
   initialState,
   reducers: {
     getMetricOptions: (state, action: PayloadAction<string[]>) => {
@@ -31,9 +35,10 @@ const metricsSlice = createSlice({
         return acc;
       }, {});
     },
+    getMetricOptionsError: (state, action: PayloadAction<GetMetricError>) => state,
   },
 });
 
-export const { getMetricOptions } = metricsSlice.actions;
+export const actions = metricsOptionsSlice.actions;
 
-export default metricsSlice.reducer;
+export default metricsOptionsSlice.reducer;
