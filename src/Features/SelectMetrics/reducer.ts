@@ -35,6 +35,12 @@ const metricsOptionsSlice = createSlice({
         return acc;
       }, {});
     },
+    setMetricOn: (state, action: PayloadAction<string>) => {
+      state.selectedMetrics[action.payload] = true;
+    },
+    setMetricOff: (state, action: PayloadAction<string>) => {
+      state.selectedMetrics[action.payload] = false;
+    },
     getMetricOptionsError: (state, action: PayloadAction<GetMetricError>) => state,
   },
 });
