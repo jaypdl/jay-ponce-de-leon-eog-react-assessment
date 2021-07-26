@@ -3,20 +3,37 @@ import { createSlice, PayloadAction } from 'redux-starter-kit';
 // Want to grab all metric types from the api
 // Add them to the reducer
 
-export type metricOptions = string[]; // type is array of strings
+// const initialState: MetricOptions = []; // initialize as empty array of strings
+export type SelectedMetric = {
+  [metricName: string]: boolean;
+};
 
-const initialState: metricOptions = []; // initialize as empty array of strings
+export type MetricState = {
+  metricsOptions: string[];
+  selectedMetrics: SelectedMetric;
+};
 
-const metricOptionSlice = createSlice({
+const initialState: MetricState = {
+  metricsOptions: [],
+  selectedMetrics: {},
+};
+
+const metricsSlice = createSlice({
   name: 'metrics',
   initialState,
   reducers: {
-    getMetricOptions: (state, action: PayloadAction<metricOptions>) => {
-      state = action.payload;
+    getMetricOptions: (state, action: PayloadAction<string[]>) => {
+      state.metricsOptions = action.payload;
+
+      // Use array reducer on now fulfilled metricsOptions to create selectedMetrics object initialized to false
+      state.selectedMetrics = state.metricsOptions.reduce((acc: SelectedMetric, val: string) => {
+        acc[val] = false;
+        return acc;
+      }, {});
     },
   },
 });
 
-export const { getMetricOptions } = metricOptionSlice.actions;
+export const { getMetricOptions } = metricsSlice.actions;
 
-export default metricOptionSlice.reducer;
+export default metricsSlice.reducer;
