@@ -4,9 +4,7 @@ import { actions } from './reducer';
 import { useQuery } from 'urql';
 import { IState } from '../../store';
 import MetricSwitch from '../../components/MetricSwitch';
-import { makeStyles } from '@material-ui/core/styles';
-import FormGroup from '@material-ui/core/FormGroup';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { Card, CardContent, FormGroup, LinearProgress, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
   loading: {
@@ -50,16 +48,20 @@ export default () => {
   if (fetching && !data) return <LinearProgress className={classes.formGroup} />;
 
   return (
-    <FormGroup row className={classes.formGroup}>
-      {metricsOptions.map(metric => {
-        return (
-          <MetricSwitch
-            metricName={metric}
-            handleClick={handleMetricSwitchChange}
-            selectedState={selectedMetrics[metric]}
-          />
-        );
-      })}
-    </FormGroup>
+    <Card className={classes.formGroup}>
+      <CardContent>
+        <FormGroup row>
+          {metricsOptions.map(metric => {
+            return (
+              <MetricSwitch
+                metricName={metric}
+                handleClick={handleMetricSwitchChange}
+                selectedState={selectedMetrics[metric]}
+              />
+            );
+          })}
+        </FormGroup>
+      </CardContent>
+    </Card>
   );
 };
