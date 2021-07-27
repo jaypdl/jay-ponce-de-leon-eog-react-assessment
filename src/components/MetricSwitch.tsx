@@ -1,13 +1,19 @@
 import React from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { withStyles, Theme } from '@material-ui/core/styles';
+// import { withStyles, Theme } from '@material-ui/core/styles';
 
-const MetricSwitch = ({ metricName, selectedState, handleChange }) => {
+type Props = {
+  metricName: string;
+  selectedState: boolean;
+  handleClick: React.ChangeEventHandler;
+};
+
+export default ({ metricName, selectedState, handleClick }: Props) => {
   return (
     <>
       <FormControlLabel
-        control={<Switch checked={selectedState} onChange={handleChange(metricName)} value={metricName} />}
+        control={<Switch checked={selectedState} onChange={handleClick} value={metricName} />}
         label={metricName}
       />
     </>
