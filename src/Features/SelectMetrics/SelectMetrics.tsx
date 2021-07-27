@@ -43,7 +43,7 @@ export default () => {
     }
     if (!data) return;
     dispatch(actions.getMetricOptions(data.getMetrics));
-  }, [data, error]);
+  }, [dispatch, data, error]);
 
   if (fetching && !data) return <LinearProgress className={classes.formGroup} />;
 
