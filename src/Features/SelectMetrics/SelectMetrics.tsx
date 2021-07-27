@@ -16,19 +16,23 @@ const useStyles = makeStyles({
 });
 
 const query = `
-query {
-  getMetrics
-}
-`;
+  query {
+    getMetrics
+  }
+  `;
+
 export default () => {
   const classes = useStyles();
 
   const { metricsOptions, selectedMetrics } = useSelector((state: IState) => state.metrics);
+
   const dispatch = useDispatch();
+
   const [{ fetching, data, error }] = useQuery({ query });
 
   const handleMetricSwitchChange: React.ChangeEventHandler<HTMLInputElement> = evt => {
     const metricName = evt.target.value;
+
     if (selectedMetrics[metricName]) {
       dispatch(actions.setMetricOff(metricName));
     } else {
@@ -41,7 +45,9 @@ export default () => {
       dispatch(actions.getMetricOptionsError({ error: error.message }));
       return;
     }
+
     if (!data) return;
+
     dispatch(actions.getMetricOptions(data.getMetrics));
   }, [dispatch, data, error]);
 
