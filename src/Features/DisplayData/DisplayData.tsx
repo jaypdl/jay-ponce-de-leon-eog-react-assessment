@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import RealTimeData from './RealTimeData';
 import { useQuery, useSubscription } from 'urql';
 import { useDispatch, useSelector } from 'react-redux';
-
-const metricSubscription = `
-  subscription{
-    newMeasurement{
-      metric
-      at
-      value
-      unit
-    }
-  }
-  `;
+import { IState } from '../../store';
 
 const historyQuery = `
   query($input: [MeasurementQuery]) {
@@ -26,19 +17,24 @@ const historyQuery = `
   }
   `;
 
-// const handleSubscription = (messages = [], response: any) => {
-//   return [response.newMessages, ...messages];
-// };
+const thirtyMinutesAgo = () => Date.now() - 30 * 60 * 1000;
+const pastTime = thirtyMinutesAgo();
 
 export default () => {
-  const [{ fetching, data, error }] = useSubscription({ query: metricSubscription });
+  const { metricsOptions } = useSelector((state: IState) => state.metrics);
 
-  console.log(data);
-
-  const [result, reexecuteQuery] = useQuery({
+  const [{ fetching: historyFetching, data: historyData, error: historyError }, reexecuteQuery] = useQuery({
     query: historyQuery,
-    variables: {},
+    variables: {
+      input: metricsOptions.map(metric => ({ metricName: metric, after: pastTime })),
+    },
   });
 
-  return <></>;
+  console.log(historyData);
+
+  return (
+    <>
+      <RealTimeData />
+    </>
+  );
 };
