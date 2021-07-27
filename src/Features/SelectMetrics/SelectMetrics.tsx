@@ -51,7 +51,7 @@ export default () => {
     dispatch(actions.getMetricOptions(data.getMetrics));
   }, [dispatch, data, error]);
 
-  if (fetching && !data) return <LinearProgress className={classes.formGroup} />;
+  if (fetching && !data) return <LinearProgress className={classes.loading} />;
 
   return (
     <Card className={classes.formGroup}>
