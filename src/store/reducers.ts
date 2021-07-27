@@ -3,5 +3,5 @@ import metricsOptionsReducer from '../Features/SelectMetrics/reducer';
 
 export default {
   weather: weatherReducer,
-  metricsOptions: metricsOptionsReducer,
+  metrics: metricsOptionsReducer,
 };
