@@ -57,6 +57,7 @@ export default () => {
                 metricName={metric}
                 handleClick={handleMetricSwitchChange}
                 selectedState={selectedMetrics[metric]}
+                key={metric}
               />
             );
           })}
