@@ -27,7 +27,7 @@ const theme = createMuiTheme({
   },
 });
 
-const subscriptionClient = new SubscriptionClient('ws://react.eogresources.com/graphql', { reconnect: true });
+const subscriptionClient = new SubscriptionClient('wss://react.eogresources.com/graphql', { reconnect: true });
 
 const client = createClient({
   url: 'https://react.eogresources.com/graphql',
