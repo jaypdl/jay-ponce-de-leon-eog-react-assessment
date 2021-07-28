@@ -11,8 +11,6 @@ import Header from './components/Header';
 import Wrapper from './components/Wrapper';
 import MainDisplay from './components/MainDisplay';
 import NowWhat from './components/NowWhat';
-import SelectMetrics from './Features/SelectMetrics/SelectMetrics';
-import DisplayData from './Features/ManageData/ManageData';
 
 const store = createStore();
 const theme = createMuiTheme({

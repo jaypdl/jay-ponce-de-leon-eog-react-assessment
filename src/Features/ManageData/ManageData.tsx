@@ -29,8 +29,7 @@ export default () => {
 
   useEffect(() => {
     if (metricsOptions) {
-      dispatch(actions.history.receivedMetricsOptions(metricsOptions));
-      dispatch(actions.realTime.receivedMetricsOptions(metricsOptions));
+      dispatch(actions.receivedMetricsOptions(metricsOptions));
     } else return;
   }, [dispatch, metricsOptions]);
 
@@ -45,11 +44,11 @@ export default () => {
 
   useEffect(() => {
     if (error) {
-      dispatch(actions.history.historyError({ error: error.message }));
+      dispatch(actions.historyError({ error: error.message }));
     }
 
     if (!data) return;
-    dispatch(actions.history.updateHistory(data.getMultipleMeasurements));
+    dispatch(actions.updateHistory(data.getMultipleMeasurements));
   }, [dispatch, data, error]);
 
   return (

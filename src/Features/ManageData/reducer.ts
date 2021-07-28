@@ -20,46 +20,38 @@ export type RealTimeState = {
   [metricName: string]: Measurement;
 };
 
-const initialHistoryState: HistoryState = {};
+export type InitialState = {
+  realTime: RealTimeState;
+  historical: HistoryState;
+};
 
-const initialRealTimeState: RealTimeState = {};
+const initialState: InitialState = {
+  realTime: {},
+  historical: {},
+};
 
-const historySlice = createSlice({
+const dataSlice = createSlice({
   name: 'history',
-  initialState: initialHistoryState,
+  initialState,
   reducers: {
     receivedMetricsOptions: (state, action: PayloadAction<string[]>) => {
-      return (state = action.payload.reduce((acc: HistoryState, metric: string) => {
+      state.historical = action.payload.reduce((acc: HistoryState, metric: string) => {
         acc[metric] = [];
         return acc;
-      }, {}));
+      }, {});
+
+      state.realTime = action.payload.reduce((acc: RealTimeState, metric: string) => {
+        acc[metric] = { at: 0, value: 0, unit: '' };
+        return acc;
+      }, {});
     },
     updateHistory: (state, action: PayloadAction<GetMultipleMeasurements>) => {
-      action.payload.forEach(entry => (state[entry.metric] = entry.measurements));
+      action.payload.forEach(entry => (state.historical[entry.metric] = entry.measurements));
     },
     historyError: (state, action: PayloadAction<ApiErrorAction>) => state,
   },
 });
 
-const realTimeSlice = createSlice({
-  name: 'realTime',
-  initialState: initialRealTimeState,
-  reducers: {
-    receivedMetricsOptions: (state, action: PayloadAction<string[]>) => {
-      return (state = action.payload.reduce((acc: RealTimeState, metric: string) => {
-        acc[metric] = { at: 0, value: 0, unit: '' };
-        return acc;
-      }, {}));
-    },
-  },
-});
+export const actions = dataSlice.actions;
 
-export const actions = {
-  history: historySlice.actions,
-  realTime: realTimeSlice.actions,
-};
-
-export default {
-  history: historySlice.reducer,
-  realTime: realTimeSlice.reducer,
-};
+export const reducer = dataSlice.reducer;
