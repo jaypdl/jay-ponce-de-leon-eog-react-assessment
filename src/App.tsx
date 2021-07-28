@@ -9,9 +9,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
+import MainDisplay from './components/MainDisplay';
 import NowWhat from './components/NowWhat';
 import SelectMetrics from './Features/SelectMetrics/SelectMetrics';
-import DisplayData from './Features/DisplayData/DisplayData';
+import DisplayData from './Features/ManageData/ManageData';
 
 const store = createStore();
 const theme = createMuiTheme({
@@ -49,8 +50,7 @@ const App = () => (
       <UrqlProvider value={client}>
         <Wrapper>
           <Header />
-          <SelectMetrics />
-          <DisplayData />
+          <MainDisplay />
           <NowWhat />
           <ToastContainer />
         </Wrapper>
