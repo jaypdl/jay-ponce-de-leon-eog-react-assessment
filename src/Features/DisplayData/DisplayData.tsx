@@ -27,9 +27,16 @@ export default () => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (metricsOptions) {
+      dispatch(actions.history.receivedMetricsOptions(metricsOptions));
+      dispatch(actions.realTime.receivedMetricsOptions(metricsOptions));
+    } else return;
+  }, [dispatch, metricsOptions]);
+
   if (!metricsOptions) return null;
 
-  const [{ fetching: historyFetching, data: historyData, error: historyError }, reexecuteQuery] = useQuery({
+  const [{ fetching, data, error }, reexecuteQuery] = useQuery({
     query: historyQuery,
     variables: {
       input: metricsOptions.map(metric => ({ metricName: metric, after: pastTime })),
@@ -37,13 +44,13 @@ export default () => {
   });
 
   useEffect(() => {
-    if (metricsOptions) {
-      dispatch(actions.history.receivedMetricsOptions(metricsOptions));
-      dispatch(actions.realTime.receivedMetricsOptions(metricsOptions));
+    if (error) {
+      dispatch(actions.history.historyError({ error: error.message }));
     }
-  }, [dispatch, metricsOptions]);
 
-  console.log(historyData);
+    if (!data) return;
+    dispatch(actions.history.updateHistory(data.getMultipleMeasurements));
+  }, [dispatch, data, error]);
 
   return (
     <>
