@@ -1,19 +1,41 @@
 import React from 'react';
-import { FormControlLabel, Switch } from '@material-ui/core';
+import {
+  FormControlLabel,
+  Switch,
+  FormHelperText,
+  Grid,
+  CardContent,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core';
 
 type Props = {
   metricName: string;
   selectedState: boolean;
+  data: {
+    at: number;
+    unit: string;
+    value: number;
+  };
   handleClick: React.ChangeEventHandler;
 };
 
-export default ({ metricName, selectedState, handleClick }: Props) => {
+export default ({ metricName, selectedState, data, handleClick }: Props) => {
+  if (!data) return <CircularProgress />;
+
   return (
     <>
-      <FormControlLabel
-        control={<Switch checked={selectedState} onChange={handleClick} value={metricName} color="primary" />}
-        label={metricName}
-      />
+      <CardContent>
+        <Grid container justify="center" alignItems="center" direction="column">
+          <Typography variant="h4">{data.value}</Typography>
+          <FormHelperText>{data.unit}</FormHelperText>
+          <FormControlLabel
+            control={<Switch checked={selectedState} onChange={handleClick} value={metricName} color="primary" />}
+            label={metricName}
+            labelPlacement="bottom"
+          />
+        </Grid>
+      </CardContent>
     </>
   );
 };

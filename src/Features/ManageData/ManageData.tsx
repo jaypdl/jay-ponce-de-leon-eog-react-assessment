@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from 'urql';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../store';
 import actions from '../../store/actions';
-import { LinearProgress } from '@material-ui/core';
 
 const historyQuery = `
   query($input: [MeasurementQuery]) {
@@ -34,7 +33,7 @@ export default () => {
 
   if (!metricsOptions) return null;
 
-  const [{ fetching, data, error }, reexecuteQuery] = useQuery({
+  const [{ data, error }] = useQuery({
     query: historyQuery,
     variables: {
       input: metricsOptions.map(metric => ({ metricName: metric, after: pastTime })),

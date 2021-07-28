@@ -4,14 +4,14 @@ import { actions } from './reducer';
 import { useQuery } from 'urql';
 import { IState } from '../../store';
 import MetricSwitch from '../../components/MetricSwitch';
-import { Card, CardContent, FormGroup, LinearProgress, makeStyles } from '@material-ui/core';
+import { CardContent, FormGroup, Grid, LinearProgress, makeStyles, Paper } from '@material-ui/core';
 
 const useStyles = makeStyles({
   loading: {
-    margin: '5% 25%',
+    margin: '5% 10%',
   },
   formGroup: {
-    margin: '5% 25%',
+    margin: '5% 10%',
   },
 });
 
@@ -24,7 +24,13 @@ const query = `
 export default () => {
   const classes = useStyles();
 
-  const { metricsOptions, selectedMetrics } = useSelector((state: IState) => state.metrics);
+  const { metrics, data: dataState } = useSelector((state: IState) => state);
+
+  if (!dataState) return <LinearProgress />;
+
+  const { metricsOptions, selectedMetrics } = metrics;
+
+  const { realTime } = dataState;
 
   const dispatch = useDispatch();
 
@@ -54,21 +60,24 @@ export default () => {
   if (fetching && !data) return <LinearProgress className={classes.loading} />;
 
   return (
-    <Card className={classes.formGroup}>
-      <CardContent>
-        <FormGroup row>
-          {metricsOptions.map(metric => {
-            return (
-              <MetricSwitch
-                metricName={metric}
-                handleClick={handleMetricSwitchChange}
-                selectedState={selectedMetrics[metric]}
-                key={metric}
-              />
-            );
-          })}
-        </FormGroup>
-      </CardContent>
-    </Card>
+    <Grid container justify="center" align-items="center">
+      <Paper className={classes.formGroup}>
+        <CardContent>
+          <FormGroup row>
+            {metricsOptions.map(metric => {
+              return (
+                <MetricSwitch
+                  metricName={metric}
+                  handleClick={handleMetricSwitchChange}
+                  selectedState={selectedMetrics[metric]}
+                  data={realTime[metric]}
+                  key={metric}
+                />
+              );
+            })}
+          </FormGroup>
+        </CardContent>
+      </Paper>
+    </Grid>
   );
 };
