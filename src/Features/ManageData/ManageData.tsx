@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import RealTimeData from './RealTimeData';
-import { useQuery, useSubscription } from 'urql';
+import { useEffect } from 'react';
+import { useQuery } from 'urql';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../store';
-import { actions } from './reducer';
-import { LinearProgress } from '@material-ui/core';
+import actions from '../../store/actions';
 
 const historyQuery = `
   query($input: [MeasurementQuery]) {
@@ -29,14 +27,13 @@ export default () => {
 
   useEffect(() => {
     if (metricsOptions) {
-      dispatch(actions.history.receivedMetricsOptions(metricsOptions));
-      dispatch(actions.realTime.receivedMetricsOptions(metricsOptions));
+      dispatch(actions.data.receivedMetricsOptions(metricsOptions));
     } else return;
   }, [dispatch, metricsOptions]);
 
   if (!metricsOptions) return null;
 
-  const [{ fetching, data, error }, reexecuteQuery] = useQuery({
+  const [{ data, error }] = useQuery({
     query: historyQuery,
     variables: {
       input: metricsOptions.map(metric => ({ metricName: metric, after: pastTime })),
@@ -45,16 +42,12 @@ export default () => {
 
   useEffect(() => {
     if (error) {
-      dispatch(actions.history.historyError({ error: error.message }));
+      dispatch(actions.data.historyError({ error: error.message }));
     }
 
     if (!data) return;
-    dispatch(actions.history.updateHistory(data.getMultipleMeasurements));
+    dispatch(actions.data.updateHistory(data.getMultipleMeasurements));
   }, [dispatch, data, error]);
 
-  return (
-    <>
-      <RealTimeData />
-    </>
-  );
+  return null;
 };
