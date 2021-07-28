@@ -25,6 +25,13 @@ export type InitialState = {
   historical: HistoryState;
 };
 
+export type NewMeasurement = {
+  at: number;
+  metric: string;
+  unit: string;
+  value: number;
+};
+
 const initialState: InitialState = {
   realTime: {},
   historical: {},
@@ -50,6 +57,10 @@ const dataSlice = createSlice({
     },
     historyError: (state, action: PayloadAction<ApiErrorAction>) => state,
     realTimeError: (state, action: PayloadAction<ApiErrorAction>) => state,
+    receivedRealTimeUpdate: (state, action: PayloadAction<NewMeasurement>) => {
+      const { at, metric, unit, value } = action.payload;
+      state.realTime[metric] = { at, unit, value };
+    },
   },
 });
 

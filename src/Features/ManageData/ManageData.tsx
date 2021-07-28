@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import RealTimeData from './RealTimeData';
-import { useQuery, useSubscription } from 'urql';
+import React, { useEffect } from 'react';
+import { useQuery } from 'urql';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../store';
-import { actions } from './reducer';
+import actions from '../../store/actions';
 import { LinearProgress } from '@material-ui/core';
 
 const historyQuery = `
@@ -29,7 +28,7 @@ export default () => {
 
   useEffect(() => {
     if (metricsOptions) {
-      dispatch(actions.receivedMetricsOptions(metricsOptions));
+      dispatch(actions.data.receivedMetricsOptions(metricsOptions));
     } else return;
   }, [dispatch, metricsOptions]);
 
@@ -44,16 +43,12 @@ export default () => {
 
   useEffect(() => {
     if (error) {
-      dispatch(actions.historyError({ error: error.message }));
+      dispatch(actions.data.historyError({ error: error.message }));
     }
 
     if (!data) return;
-    dispatch(actions.updateHistory(data.getMultipleMeasurements));
+    dispatch(actions.data.updateHistory(data.getMultipleMeasurements));
   }, [dispatch, data, error]);
 
-  return (
-    <>
-      <RealTimeData />
-    </>
-  );
+  return null;
 };
