@@ -47,4 +47,4 @@ const metricsOptionsSlice = createSlice({
 
 export const actions = metricsOptionsSlice.actions;
 
-export default metricsOptionsSlice.reducer;
+export const reducer = metricsOptionsSlice.reducer;

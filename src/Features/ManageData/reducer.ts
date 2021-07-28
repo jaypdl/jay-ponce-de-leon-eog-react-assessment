@@ -49,6 +49,7 @@ const dataSlice = createSlice({
       action.payload.forEach(entry => (state.historical[entry.metric] = entry.measurements));
     },
     historyError: (state, action: PayloadAction<ApiErrorAction>) => state,
+    realTimeError: (state, action: PayloadAction<ApiErrorAction>) => state,
   },
 });
 
