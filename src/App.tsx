@@ -9,8 +9,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
-import MainDisplay from './components/MainDisplay';
-import NowWhat from './components/NowWhat';
+import RealTimeData from './Features/ManageData/RealTimeData';
+import SelectMetrics from './Features/SelectMetrics/SelectMetrics';
+import ManageData from './Features/ManageData/ManageData';
+import Chart from './Features/Charting/Chart';
+// import NowWhat from './components/NowWhat';
 
 const store = createStore();
 const theme = createMuiTheme({
@@ -48,8 +51,11 @@ const App = () => (
       <UrqlProvider value={client}>
         <Wrapper>
           <Header />
-          <MainDisplay />
-          <NowWhat />
+          <RealTimeData />
+          <SelectMetrics />
+          <ManageData />
+          <Chart />
+          {/* <NowWhat /> */}
           <ToastContainer />
         </Wrapper>
       </UrqlProvider>

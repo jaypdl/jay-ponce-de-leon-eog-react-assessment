@@ -41,17 +41,17 @@ const dataSlice = createSlice({
   name: 'history',
   initialState,
   reducers: {
-    receivedMetricsOptions: (state, action: PayloadAction<string[]>) => {
-      state.historical = action.payload.reduce((acc: HistoryState, metric: string) => {
-        acc[metric] = [];
-        return acc;
-      }, {});
+    // receivedMetricsOptions: (state, action: PayloadAction<string[]>) => {
+    //   state.historical = action.payload.reduce((acc: HistoryState, metric: string) => {
+    //     acc[metric] = [];
+    //     return acc;
+    //   }, {});
 
-      state.realTime = action.payload.reduce((acc: RealTimeState, metric: string) => {
-        acc[metric] = { at: 0, value: 0, unit: '' };
-        return acc;
-      }, {});
-    },
+    // state.realTime = action.payload.reduce((acc: RealTimeState, metric: string) => {
+    //   acc[metric] = { at: 0, value: 0, unit: '' };
+    //   return acc;
+    // }, {});
+    // },
     updateHistory: (state, action: PayloadAction<GetMultipleMeasurements>) => {
       action.payload.forEach(entry => (state.historical[entry.metric] = entry.measurements));
     },
@@ -60,6 +60,10 @@ const dataSlice = createSlice({
     receivedRealTimeUpdate: (state, action: PayloadAction<NewMeasurement>) => {
       const { at, metric, unit, value } = action.payload;
       state.realTime[metric] = { at, unit, value };
+      if (state.historical[metric]) {
+        state.historical[metric].push({ at, unit, value });
+        state.historical[metric].shift();
+      }
     },
   },
 });

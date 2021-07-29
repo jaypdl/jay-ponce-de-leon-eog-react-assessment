@@ -25,11 +25,11 @@ export default () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (metricsOptions) {
-      dispatch(actions.data.receivedMetricsOptions(metricsOptions));
-    } else return;
-  }, [dispatch, metricsOptions]);
+  // useEffect(() => {
+  //   if (metricsOptions) {
+  //     dispatch(actions.data.receivedMetricsOptions(metricsOptions));
+  //   } else return;
+  // }, [dispatch, metricsOptions]);
 
   if (!metricsOptions) return null;
 
