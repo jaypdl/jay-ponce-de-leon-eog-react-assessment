@@ -20,11 +20,6 @@ export default () => {
 
   const [{ data, error }] = useSubscription({ query: metricSubscription });
 
-  // if (!data) return null;
-
-  // const { newMeasurement } = data;
-
-  // console.log(data);
   useEffect(() => {
     if (error) {
       dispatch(actions.data.realTimeError({ error: error.message }));

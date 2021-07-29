@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions } from './reducer';
+import actions from '../../store/actions';
 import { useQuery } from 'urql';
 import { IState } from '../../store';
 import MetricSwitch from '../../components/MetricSwitch';
@@ -22,11 +22,9 @@ const query = `
   `;
 
 export default () => {
-  const classes = useStyles();
+  const [{ fetching, data, error }] = useQuery({ query });
 
   const { metrics, data: dataState } = useSelector((state: IState) => state);
-
-  if (!dataState) return <LinearProgress />;
 
   const { metricsOptions, selectedMetrics } = metrics;
 
@@ -34,29 +32,27 @@ export default () => {
 
   const dispatch = useDispatch();
 
-  const [{ fetching, data, error }] = useQuery({ query });
+  useEffect(() => {
+    if (error) {
+      dispatch(actions.metrics.getMetricOptionsError({ error: error.message }));
+      return;
+    }
+    if (!data) return;
+
+    dispatch(actions.metrics.getMetricOptions(data.getMetrics));
+    // dispatch(actions.data.receivedMetricsOptions(data.getMetrics));
+  }, [dispatch, data, error]);
 
   const handleMetricSwitchChange: React.ChangeEventHandler<HTMLInputElement> = evt => {
     const metricName = evt.target.value;
 
     if (selectedMetrics[metricName]) {
-      dispatch(actions.setMetricOff(metricName));
+      dispatch(actions.metrics.setMetricOff(metricName));
     } else {
-      dispatch(actions.setMetricOn(metricName));
+      dispatch(actions.metrics.setMetricOn(metricName));
     }
   };
-
-  useEffect(() => {
-    if (error) {
-      dispatch(actions.getMetricOptionsError({ error: error.message }));
-      return;
-    }
-
-    if (!data) return;
-
-    dispatch(actions.getMetricOptions(data.getMetrics));
-  }, [dispatch, data, error]);
-
+  const classes = useStyles();
   if (fetching && !data) return <LinearProgress className={classes.loading} />;
 
   return (
