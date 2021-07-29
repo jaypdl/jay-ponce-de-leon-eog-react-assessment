@@ -11,8 +11,12 @@ const useStyles = makeStyles({
     margin: '5% 10%',
   },
   formGroup: {
-    margin: '5% 10%',
+    margin: '1% 5%',
+    // border: '2px solid red',
   },
+  // borderColor: {
+  // border: '2px solid red',
+  // },
 });
 
 const query = `
@@ -40,7 +44,6 @@ export default () => {
     if (!data) return;
 
     dispatch(actions.metrics.getMetricOptions(data.getMetrics));
-    // dispatch(actions.data.receivedMetricsOptions(data.getMetrics));
   }, [dispatch, data, error]);
 
   const handleMetricSwitchChange: React.ChangeEventHandler<HTMLInputElement> = evt => {

@@ -2,8 +2,15 @@ import React, { FunctionComponent } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'redux-starter-kit';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, makeStyles, CardContent, Grid, Typography, Paper } from '@material-ui/core';
 import { IState } from '../../store';
+
+const useStyles = makeStyles({
+  wrapper: {
+    height: '100vh',
+    backgroundColor: 'white',
+  },
+});
 
 const selectEnabledMetrics = createSelector(
   (state: IState) => state.metrics.selectedMetrics,
@@ -33,7 +40,7 @@ const CustomizedAxisTick: FunctionComponent<any> = (props: any) => {
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={5} textAnchor="end" fill="#666" transform="rotate(-15)">
+      <text x={0} y={0} dy={5} textAnchor="end" transform="rotate(-15)">
         {(payload.value = new Date(payload.value).toLocaleTimeString())}
       </text>
     </g>
@@ -41,58 +48,70 @@ const CustomizedAxisTick: FunctionComponent<any> = (props: any) => {
 };
 
 const Chart = () => {
+  const classes = useStyles();
   const safeToLoad = useSelector(checkForData);
 
   const chartData = useSelector(selectEnabledMetrics);
+  const chartColors = ['#8884d8', '#82ca9d', 'red', 'blue', 'orange', 'black'];
   const { selectedData, uniqueUnits } = chartData;
   if (!safeToLoad) return <CircularProgress />;
-  const chartColors = ['#8884d8', '#82ca9d', 'red', 'blue', 'orange', 'black'];
+
+  if (uniqueUnits.length <= 0) {
+    return (
+      <Grid container justify="center" alignItems="center" direction="row">
+        <Paper>
+          <CardContent>
+            <Typography variant="h4">There is nothing to show!</Typography>
+            <Typography variant="body1">Choose some metrics from above!</Typography>
+          </CardContent>
+        </Paper>
+      </Grid>
+    );
+  }
 
   return (
-    <>
-      {uniqueUnits.length > 0 && (
-        <ResponsiveContainer width="100%">
-          <LineChart width={800} height={600}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="at"
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              allowDuplicatedCategory={false}
-              scale="utc"
-              tick={<CustomizedAxisTick />}
-            />
-            {uniqueUnits.map((unit, index) => (
-              <YAxis
-                dataKey="value"
-                type="number"
-                scale="auto"
-                domain={[(dataMin: number) => dataMin * 0.9, (dataMax: number) => dataMax * 1.1]}
-                allowDuplicatedCategory={false}
-                yAxisId={unit}
-                unit={' ' + unit}
-                key={unit}
-              />
-            ))}
-            <Tooltip />
-            <Legend />
-            {selectedData.map((metric, index) => (
-              <Line
-                dataKey="value"
-                data={metric.data}
-                name={metric.metricName}
-                key={metric.metricName}
-                unit={' ' + metric.unit}
-                yAxisId={metric.unit}
-                dot={false}
-                stroke={chartColors[index]}
-                isAnimationActive={false}
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      )}
-    </>
+    <ResponsiveContainer width="100%" height="72%" className={classes.wrapper}>
+      <LineChart width={800}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis
+          dataKey="at"
+          type="number"
+          domain={['dataMin', 'dataMax']}
+          allowDuplicatedCategory={false}
+          scale="time"
+          tick={<CustomizedAxisTick />}
+        />
+        {uniqueUnits.map((unit, index) => (
+          <YAxis
+            dataKey="value"
+            type="number"
+            scale="auto"
+            orientation={index === 2 ? 'right' : 'left'}
+            // domain={['dataMin', 'dataMax']}
+            domain={['auto', (dataMax: number) => dataMax * 1.05]}
+            allowDuplicatedCategory={false}
+            yAxisId={unit}
+            unit={' ' + unit}
+            key={unit}
+          />
+        ))}
+        <Tooltip />
+        <Legend />
+        {selectedData.map((metric, index) => (
+          <Line
+            dataKey="value"
+            data={metric.data}
+            name={metric.metricName}
+            key={metric.metricName}
+            unit={' ' + metric.unit}
+            yAxisId={metric.unit}
+            dot={false}
+            stroke={chartColors[index]}
+            isAnimationActive={false}
+          />
+        ))}
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
 export default Chart;
