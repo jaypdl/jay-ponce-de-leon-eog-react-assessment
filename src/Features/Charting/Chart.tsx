@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'redux-starter-kit';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -27,12 +27,26 @@ export const checkForData = createSelector(
   data => Object.keys(data).length > 0,
 );
 
+// Customizing the x-axis. Able to get more perfomance converting a few timestrings to days instead of every one in memory
+const CustomizedAxisTick: FunctionComponent<any> = (props: any) => {
+  const { x, y, payload } = props;
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text x={0} y={0} dy={5} textAnchor="end" fill="#666" transform="rotate(-15)">
+        {(payload.value = new Date(payload.value).toLocaleTimeString())}
+      </text>
+    </g>
+  );
+};
+
 const Chart = () => {
   const safeToLoad = useSelector(checkForData);
 
   const chartData = useSelector(selectEnabledMetrics);
   const { selectedData, uniqueUnits } = chartData;
   if (!safeToLoad) return <CircularProgress />;
+  const chartColors = ['#8884d8', '#82ca9d', 'red', 'blue', 'orange', 'black'];
 
   return (
     <>
@@ -40,28 +54,39 @@ const Chart = () => {
         <ResponsiveContainer width="100%">
           <LineChart width={800} height={600}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="at" type="number" allowDuplicatedCategory={false} domain={['dataMin', 'dataMax']} />
-            {uniqueUnits.map(unit => (
+            <XAxis
+              dataKey="at"
+              type="number"
+              domain={['dataMin', 'dataMax']}
+              allowDuplicatedCategory={false}
+              scale="utc"
+              tick={<CustomizedAxisTick />}
+            />
+            {uniqueUnits.map((unit, index) => (
               <YAxis
                 dataKey="value"
                 type="number"
                 scale="auto"
+                domain={[(dataMin: number) => dataMin * 0.9, (dataMax: number) => dataMax * 1.1]}
                 allowDuplicatedCategory={false}
                 yAxisId={unit}
+                unit={' ' + unit}
                 key={unit}
               />
             ))}
             <Tooltip />
             <Legend />
-            {selectedData.map(metric => (
+            {selectedData.map((metric, index) => (
               <Line
                 dataKey="value"
                 data={metric.data}
                 name={metric.metricName}
                 key={metric.metricName}
-                unit={metric.unit}
+                unit={' ' + metric.unit}
                 yAxisId={metric.unit}
                 dot={false}
+                stroke={chartColors[index]}
+                isAnimationActive={false}
               />
             ))}
           </LineChart>
