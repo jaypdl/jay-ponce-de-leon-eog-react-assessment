@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useSubscription } from 'urql';
 import { useDispatch } from 'react-redux';
-// import { IState } from '../../store';
 import actions from '../../store/actions';
 
 const metricSubscription = `

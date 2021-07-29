@@ -60,6 +60,10 @@ const dataSlice = createSlice({
     receivedRealTimeUpdate: (state, action: PayloadAction<NewMeasurement>) => {
       const { at, metric, unit, value } = action.payload;
       state.realTime[metric] = { at, unit, value };
+      if (state.historical[metric]) {
+        state.historical[metric].push({ at, unit, value });
+        state.historical[metric].shift();
+      }
     },
   },
 });

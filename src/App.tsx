@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
 import MainDisplay from './components/MainDisplay';
-import NowWhat from './components/NowWhat';
+// import NowWhat from './components/NowWhat';
 
 const store = createStore();
 const theme = createMuiTheme({
@@ -49,7 +49,7 @@ const App = () => (
         <Wrapper>
           <Header />
           <MainDisplay />
-          <NowWhat />
+          {/* <NowWhat /> */}
           <ToastContainer />
         </Wrapper>
       </UrqlProvider>
