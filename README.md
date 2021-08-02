@@ -1,6 +1,6 @@
 ## My Notes on the challenge
 
-This was a really fun challenge to work on! 
+This was a really fun challenge to work on! It's deployed here: [https://jay-ponce-de-leon-eog-react-assessment.vercel.app/](https://jay-ponce-de-leon-eog-react-assessment.vercel.app/)
 
 I had never used TypeScript, GraphQL, or charted anything before. So it was a really good learning experience.
 
